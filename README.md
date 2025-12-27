@@ -90,8 +90,42 @@ Copy code
 📺 Season / Episode Selector
 ➡️ More Like This
 
-yaml
-Copy code
+## 🚀 Deploy Keewacker
+
+Deploy **Keewacker** anywhere using the buttons below.  
+All buttons follow the **Keewacker color system** (yellow + black).
+
+---
+
+### ▶️ One-Click Deploy (Keewacker Style)
+
+[![Deploy on Vercel](https://img.shields.io/badge/Deploy%20on-Vercel-0B0B0B?style=for-the-badge&logo=vercel&logoColor=F5C400)](https://vercel.com/new/clone?repository-url=https://github.com/allnine-dev/keewacker)
+
+[![Run on Replit](https://img.shields.io/badge/Run%20on-Replit-0B0B0B?style=for-the-badge&logo=replit&logoColor=F5C400)](https://replit.com/github/allnine-dev/keewacker)
+
+[![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-0B0B0B?style=for-the-badge&logo=netlify&logoColor=F5C400)](https://app.netlify.com/start/deploy?repository=https://github.com/allnine-dev/keewacker)
+
+[![Open in Codespaces](https://img.shields.io/badge/Open%20in-Codespaces-0B0B0B?style=for-the-badge&logo=github&logoColor=F5C400)](https://codespaces.new/allnine-dev/keewacker)
+
+[![Open in StackBlitz](https://img.shields.io/badge/Open%20in-StackBlitz-0B0B0B?style=for-the-badge&logo=stackblitz&logoColor=F5C400)](https://stackblitz.com/github/allnine-dev/keewacker)
+
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-0B0B0B?style=for-the-badge&logo=codesandbox&logoColor=F5C400)](https://codesandbox.io/p/github/allnine-dev/keewacker)
+
+---
+
+### 🌐 Live Deployments
+- **Keewacker on Vercel** — https://keewacker.vercel.app  
+- **Keewacker on Replit** — https://keewacker.replit.app  
+
+> ℹ️ Fork the repository to deploy your own instance.
+
+---
+
+### ⚙️ Environment Variables
+
+```env
+OMDB_API_KEY=your_key_here
+NEXT_PUBLIC_VIDSRC_ORIGIN=https://vidsrc.cc
 
 Designed to scale from **laptop → TV** seamlessly.
 
