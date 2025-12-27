@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 import SearchBar from "./SearchBar";
+import { useAuth } from "@/lib/auth";
+import { User, LogOut, Heart } from "lucide-react";
 
 interface KeewackerShellProps {
   children: ReactNode;
@@ -11,6 +13,8 @@ interface KeewackerShellProps {
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Keewacker";
 
 export default function KeewackerShell({ children }: KeewackerShellProps) {
+  const { user, logout, isAuthenticated } = useAuth();
+
   return (
     <div className="min-h-screen bg-cinema-bg">
       {/* Header */}
@@ -32,6 +36,54 @@ export default function KeewackerShell({ children }: KeewackerShellProps) {
             <div className="flex items-center gap-2 md:gap-4">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/trending">Trending</NavLink>
+              <NavLink href="/genre">Genres</NavLink>
+              
+              {/* User Menu */}
+              {isAuthenticated ? (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/watchlist"
+                    className="text-cinema-text hover:text-cinema-accent p-2 rounded-lg transition-colors"
+                    title="My Watchlist"
+                  >
+                    <Heart className="h-5 w-5" />
+                  </Link>
+                  <div className="relative group">
+                    <button className="flex items-center gap-2 text-cinema-text hover:text-cinema-accent p-2 rounded-lg transition-colors">
+                      <User className="h-5 w-5" />
+                      <span className="hidden lg:inline text-sm">{user?.username}</span>
+                    </button>
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                      <div className="p-3 border-b border-zinc-800">
+                        <p className="text-white font-medium">{user?.username}</p>
+                        <p className="text-zinc-400 text-xs">{user?.email}</p>
+                      </div>
+                      <Link
+                        href="/watchlist"
+                        className="flex items-center gap-2 px-3 py-2 text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+                      >
+                        <Heart className="h-4 w-4" />
+                        My Watchlist
+                      </Link>
+                      <button
+                        onClick={logout}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 text-cinema-bg bg-cinema-accent hover:bg-cinema-accent/90 px-4 py-2 rounded-lg font-medium transition-colors"
+                >
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </Link>
+              )}
             </div>
           </div>
 

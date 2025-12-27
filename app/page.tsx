@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { TmdbSearchItem } from "@/lib/types";
 import { getTmdbImageUrl, getTrending } from "@/lib/tmdb";
+import ContinueWatching from "@/components/ContinueWatching";
 
 export default async function HomePage() {
   // Fetch trending content
@@ -19,6 +20,9 @@ export default async function HomePage() {
 
       {/* Content Sections */}
       <div className="max-w-7xl mx-auto px-6 py-12">
+        {/* Continue Watching */}
+        <ContinueWatching />
+        
         <ContentSection title="Trending This Week" items={trendingAll.slice(1, 9)} />
         <ContentSection title="Popular Movies" items={trendingMovies.slice(0, 8)} />
         <ContentSection title="Popular TV Shows" items={trendingTv.slice(0, 8)} />
