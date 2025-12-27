@@ -1,14 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { User, Mail, Lock, Eye, EyeOff, LogIn, UserPlus, Popcorn } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [redirectTo, setRedirectTo] = useState("/");
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get("redirect") || "/";
+      setRedirectTo(redirect);
+    } catch (err) {
+      setRedirectTo("/");
+    }
+  }, []);
   const { login, register, isAuthenticated } = useAuth();
   
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -19,7 +29,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirectTo = searchParams.get("redirect") || "/";
+  // `redirectTo` is populated in an effect to avoid CSR-bailout warnings during build
 
   // Redirect if already logged in
   if (isAuthenticated) {
