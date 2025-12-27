@@ -1,33 +1,49 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { buildVidlinkUrl } from "@/lib/vidlink";
-import { VidlinkUrlParams, VidlinkPlayerEvent, PlaybackProgress } from "@/lib/types";
+import { getServerById, getDefaultServer, ServerParams } from "@/lib/servers";
+import { VidlinkPlayerEvent, PlaybackProgress, MediaType } from "@/lib/types";
+import ServerSelector from "./ServerSelector";
 
 interface PlayerFrameProps {
-  urlParams: VidlinkUrlParams;
   tmdbId: number;
+  mediaType: "movie" | "tv";
+  season?: number;
+  episode?: number;
   onEvent?: (event: VidlinkPlayerEvent["data"]) => void;
   onMediaData?: (data: any) => void;
 }
 
-const VIDLINK_ORIGIN = process.env.NEXT_PUBLIC_VIDLINK_ORIGIN || "https://vidlink.pro";
-
 export default function PlayerFrame({
-  urlParams,
   tmdbId,
+  mediaType,
+  season,
+  episode,
   onEvent,
   onMediaData,
 }: PlayerFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [currentServer, setCurrentServer] = useState<string>("vidlink");
   const [embedUrl, setEmbedUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
+  // Build embed URL when server or params change
   useEffect(() => {
-    const url = buildVidlinkUrl(urlParams);
+    const server = getServerById(currentServer) || getDefaultServer();
+    const params: ServerParams = {
+      tmdbId,
+      mediaType,
+      season: season || 1,
+      episode: episode || 1,
+    };
+    const url = server.buildUrl(params);
     setEmbedUrl(url);
     setIsLoading(true);
-  }, [urlParams]);
+  }, [currentServer, tmdbId, mediaType, season, episode]);
+
+  const handleServerChange = (serverId: string) => {
+    setCurrentServer(serverId);
+  };
 
   const handlePlayerEvent = useCallback(
     async (eventData: VidlinkPlayerEvent["data"]) => {
@@ -41,9 +57,9 @@ export default function PlayerFrame({
         try {
           const progress: PlaybackProgress = {
             tmdbId,
-            mediaType: urlParams.mediaType === "anime" ? "anime" : urlParams.mediaType,
-            season: urlParams.season,
-            episode: urlParams.episode,
+            mediaType,
+            season,
+            episode,
             currentTime: eventData.currentTime,
             duration: eventData.duration,
             lastWatched: new Date().toISOString(),
@@ -59,7 +75,7 @@ export default function PlayerFrame({
         }
       }
     },
-    [tmdbId, urlParams, onEvent]
+    [tmdbId, mediaType, season, episode, onEvent]
   );
 
   const handleMediaData = useCallback(
@@ -85,12 +101,7 @@ export default function PlayerFrame({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // CRITICAL: Validate origin
-      if (event.origin !== VIDLINK_ORIGIN) {
-        return;
-      }
-
-      // Handle player events
+      // Handle player events from any embed source
       if (event.data?.type === "PLAYER_EVENT") {
         handlePlayerEvent(event.data.data);
       }
@@ -110,26 +121,41 @@ export default function PlayerFrame({
   };
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-cinema-bg">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-cinema-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-cinema-muted text-lg">Loading player...</p>
-          </div>
-        </div>
-      )}
+    <div className="space-y-4">
+      {/* Server Selector */}
+      <div className="flex items-center justify-between">
+        <ServerSelector
+          currentServer={currentServer}
+          mediaType={mediaType}
+          onServerChange={handleServerChange}
+        />
+        <p className="text-cinema-muted text-sm">
+          {isLoading ? "Loading..." : "Player ready"}
+        </p>
+      </div>
 
-      <iframe
-        ref={iframeRef}
-        src={embedUrl}
-        className="w-full h-full"
-        allowFullScreen={true}
-        allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-        onLoad={handleIframeLoad}
-        title="Video Player"
-        referrerPolicy="origin"
-      />
+      {/* Player */}
+      <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-cinema-bg">
+            <div className="text-center">
+              <div className="w-16 h-16 border-4 border-cinema-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-cinema-muted text-lg">Loading player...</p>
+            </div>
+          </div>
+        )}
+
+        <iframe
+          ref={iframeRef}
+          src={embedUrl}
+          className="w-full h-full"
+          allowFullScreen={true}
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
+          onLoad={handleIframeLoad}
+          title="Video Player"
+          referrerPolicy="origin"
+        />
+      </div>
     </div>
   );
 }

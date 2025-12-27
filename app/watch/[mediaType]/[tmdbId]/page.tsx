@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import WatchLayout from "@/components/WatchLayout";
-import { TmdbMetadata, VidlinkUrlParams } from "@/lib/types";
+import { TmdbMetadata } from "@/lib/types";
 import { fetchMovieDetails, fetchTvDetails } from "@/lib/tmdb";
 import EpisodeSelector from "./EpisodeSelector";
 
@@ -43,7 +43,7 @@ export default async function WatchPage({
   searchParams,
 }: WatchPageProps) {
   const { mediaType, tmdbId } = params;
-  const { season, episode, type } = searchParams;
+  const { season, episode } = searchParams;
 
   // Validate media type
   if (!["movie", "tv", "anime"].includes(mediaType)) {
@@ -56,37 +56,26 @@ export default async function WatchPage({
     notFound();
   }
 
-  // Build player params for Vidlink
-  const playerParams: VidlinkUrlParams = {
-    mediaType: mediaType as "movie" | "tv" | "anime",
-    tmdbId: parseInt(tmdbId, 10),
-    autoplay: true,
-    primaryColor: "F5C400",
-    title: true,
-    poster: true,
-  };
-
-  // Add season/episode for TV
-  if (mediaType === "tv") {
-    playerParams.season = season ? parseInt(season, 10) : 1;
-    playerParams.episode = episode ? parseInt(episode, 10) : 1;
-  }
-
-  // Add episode/type for anime
-  if (mediaType === "anime" && episode && type) {
-    playerParams.episode = parseInt(episode, 10);
-    playerParams.animeType = type as "sub" | "dub";
-  }
+  // Parse season/episode for TV
+  const currentSeason = season ? parseInt(season, 10) : 1;
+  const currentEpisode = episode ? parseInt(episode, 10) : 1;
+  const parsedTmdbId = parseInt(tmdbId, 10);
 
   return (
-    <WatchLayout metadata={metadata} playerParams={playerParams}>
+    <WatchLayout
+      metadata={metadata}
+      tmdbId={parsedTmdbId}
+      mediaType={mediaType === "anime" ? "tv" : (mediaType as "movie" | "tv")}
+      season={mediaType === "tv" || mediaType === "anime" ? currentSeason : undefined}
+      episode={mediaType === "tv" || mediaType === "anime" ? currentEpisode : undefined}
+    >
       {/* Episode selector for TV shows */}
       {metadata.mediaType === "tv" && (
         <EpisodeSelector
-          tmdbId={parseInt(tmdbId, 10)}
+          tmdbId={parsedTmdbId}
           totalSeasons={metadata.numberOfSeasons || 1}
-          currentSeason={season ? parseInt(season, 10) : 1}
-          currentEpisode={episode ? parseInt(episode, 10) : 1}
+          currentSeason={currentSeason}
+          currentEpisode={currentEpisode}
         />
       )}
 
