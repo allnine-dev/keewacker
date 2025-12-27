@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-cinema-border;
+  }
+
+  body {
+    @apply bg-cinema-bg text-cinema-text antialiased;
+  }
+
+  /* TV-ready focus states */
+  *:focus-visible {
+    @apply outline-none ring-4 ring-cinema-accent ring-offset-2 ring-offset-cinema-bg;
+  }
+
+  /* Larger tap targets for TV remotes */
+  button,
+  a {
+    @apply transition-transform duration-150;
+  }
+
+  button:active,
+  a:active {
+    @apply scale-95;
+  }
+}
+
+@layer utilities {
+  .tv-focus {
+    @apply focus-visible:ring-4 focus-visible:ring-cinema-accent focus-visible:ring-offset-2 focus-visible:ring-offset-cinema-bg;
+  }
+
+  .tv-button {
+    @apply min-h-[56px] min-w-[56px] px-6 py-3 text-lg font-semibold rounded-lg;
+  }
+
+  .tv-card {
+    @apply tv-focus cursor-pointer hover:scale-105 transition-transform;
+  }
+}
