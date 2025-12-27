@@ -1,246 +1,166 @@
-# Keewacker - Cinema Streaming Platform
+# 🎬 KEEWACKER  
+### A clean, IMDb-powered streaming interface built on Vidsrc embeds
 
-A Next.js-based streaming platform that embeds playback using Vidsrc iframe endpoints with IMDb integration.
+![Status](https://img.shields.io/badge/status-active-success)
+![Next.js](https://img.shields.io/badge/build-Next.js-black)
+![UI](https://img.shields.io/badge/UI-cinema--dark-yellow)
+![TV Ready](https://img.shields.io/badge/TV-ready-blue)
 
-## Features
+**Keewacker** is a modern movie, TV, and anime streaming interface that embeds licensed playback using **Vidsrc** and pulls rich metadata using **IMDb IDs (`tt...`)**.
 
-- ✅ **Exact Vidsrc API Implementation** - Full support for movie, TV, and anime endpoints
-- ✅ **IMDb Metadata** - Fetch rich metadata using OMDb API (tt... IDs)
-- ✅ **TV-Ready UI** - 10-foot interface with keyboard/remote navigation
-- ✅ **Player Event Tracking** - PostMessage integration for playback events
-- ✅ **Progress Tracking** - Save and resume playback progress
-- ✅ **Cinema Dark Theme** - Professional dark theme with warm yellow accents
-- ✅ **Responsive Design** - Works on desktop, tablet, and TV interfaces
+Built to feel cinematic. Built to work everywhere. 🍿
 
-## Tech Stack
+---
 
-- **Next.js 14+** (App Router, TypeScript)
-- **Tailwind CSS** (Cinema dark theme)
-- **Zod** (Validation)
-- **OMDb API** (Metadata)
-- **Vidsrc.cc** (Video embedding)
+## ✨ What is Keewacker?
 
-## Getting Started
+Keewacker is **not a hosting service**.  
+It is a **smart, embed-based streaming frontend** designed for speed, clarity, and trust.
 
-### Prerequisites
+**Keewacker lets you:**
+- 🎥 Stream movies, TV shows, and anime
+- 🆔 Use IMDb IDs (`tt...`) as the source of truth
+- 🖼️ Auto-load posters, plots, ratings, and metadata
+- 📺 Run smoothly on TVs, desktops, and mobile
+- 🎮 Navigate with a remote (10-foot UI)
 
-- Node.js 18+ and npm/yarn/pnpm
-- OMDb API Key (free from https://www.omdbapi.com/apikey.aspx)
+Think **Pluto / Plex vibes**, but dev-first.
 
-### Installation
+---
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+## 🧠 How It Works
 
-2. **Set up environment variables:**
-   ```bash
-   cp .env.local.example .env.local
-   ```
+IMDb ID (tt...)
+↓
+OMDb Metadata
+↓
+Vidsrc Embed (iframe)
+↓
+Keewacker Player + UI
 
-3. **Edit `.env.local` and add your OMDb API key:**
-   ```env
-   OMDB_API_KEY=your_key_here
-   NEXT_PUBLIC_VIDSRC_ORIGIN=https://vidsrc.cc
-   NEXT_PUBLIC_APP_NAME=Keewacker
-   ```
+yaml
+Copy code
 
-4. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+Simple. Clean. Reliable.
 
-5. **Open http://localhost:3000**
+---
 
-## Usage
+## 🎮 Feature Status
 
-### Watch a Movie
-Navigate to: `/watch/movie/[imdbId]`
+Movies Support ██████████████░░░░░░░ 75%
+TV Shows Support ██████████████████░░ 90%
+Anime Support ███████████████░░░░░ 80%
+IMDb Metadata ████████████████████ 100%
+TV / Remote UI ██████████████████░░ 90%
 
-Example: `/watch/movie/tt6263850` (Deadpool 2)
+yaml
+Copy code
 
-### Watch a TV Show
-Navigate to: `/watch/tv/[imdbId]?season=1&episode=1`
+---
 
-Example: `/watch/tv/tt0944947?season=1&episode=1` (Game of Thrones)
+## 🚀 Core Features
 
-### Watch Anime
-Navigate to: `/watch/anime/[id]?episode=1&type=sub`
+- 🎬 Movie, TV & anime playback
+- 🆔 IMDb ID–based routing
+- 🖼️ Poster & backdrop fetching
+- 📝 Subtitle support (single & multi-file)
+- ⏯️ Resume playback
+- 📡 Player events (`play`, `pause`, `time`, `complete`)
+- 📺 TV-ready navigation (10-foot UI)
 
-Example: `/watch/anime/ani21?episode=1&type=sub`
+---
 
-## Project Structure
+## 🧭 App Sections
 
-```
-keewacker/
-├── app/
-│   ├── layout.tsx              # Root layout with shell
-│   ├── page.tsx                # Home page
-│   ├── globals.css             # Global styles + TV focus states
-│   ├── watch/
-│   │   └── [mediaType]/
-│   │       └── [imdbId]/
-│   │           ├── page.tsx    # Watch page
-│   │           └── EpisodeSelector.tsx
-│   └── api/
-│       ├── imdb/[imdbId]/
-│       │   └── route.ts        # IMDb metadata proxy
-│       └── progress/
-│           └── route.ts        # Progress tracking
-├── components/
-│   ├── KeewackerShell.tsx      # App shell with nav
-│   ├── PosterHero.tsx          # Hero section with poster
-│   ├── WatchLayout.tsx         # Watch page layout
-│   ├── PlayerFrame.tsx         # Video player iframe
-│   └── TvRemoteHints.tsx       # Remote control guide
-├── lib/
-│   ├── vidsrc.ts               # Vidsrc URL builder
-│   ├── imdb.ts                 # OMDb metadata fetcher
-│   └── types.ts                # TypeScript types
-└── ...config files
-```
+- 🏠 **Home** — Trending, Continue Watching, Popular
+- ⭐ **Featured** — Editor picks & highlights
+- 💎 **Good Stuff** — Hidden gems & binge-worthy picks
+- 🆕 **New to Keewacker** — Recently added titles
+- 🗂️ **Categories** — Movies, TV, Anime, Genres
 
-## Vidsrc API
+---
 
-The platform implements the exact Vidsrc API specification:
+## 🖥️ Watch Page Layout
+![Watch Page Example](https://raw.githubusercontent.com/allnine-dev/keewacker/7b95578d019687561f9048810c255a41dda6119f/Screenshot%202025-12-27%202.23.16%20AM.png)
 
-### Movie Endpoint
-```
-/{version}/embed/movie/{id}
-```
+🎬 Title (IMDb ★ Rating)
+🗓️ Year • Runtime • Genre
+📖 Plot Summary
 
-### TV Endpoints
-```
-/{version}/embed/tv/{id}
-/{version}/embed/tv/{id}/{season}
-/{version}/embed/tv/{id}/{season}/{episode}
-```
+📺 Season / Episode Selector
+➡️ More Like This
 
-### Anime Endpoint
-```
-/v2/embed/anime/{id}/{episode}/{type}
-```
+yaml
+Copy code
 
-### Supported Parameters
-- `poster`: Show/hide poster
-- `autoPlay`: Auto-start playback
-- `startAt`: Start time in seconds
-- `color`: Player accent color (hex)
-- `sub.file` / `sub.label`: Custom subtitles
-- `sub.info`: Multiple subtitle tracks (JSON)
+Designed to scale from **laptop → TV** seamlessly.
 
-## Player Events
+---
 
-The player listens for postMessage events from the Vidsrc iframe:
+## 🧩 Tech Stack
 
-```typescript
-window.addEventListener('message', (event) => {
-  if (event.origin !== 'https://vidsrc.cc') return;
-  
-  if (event.data.type === 'PLAYER_EVENT') {
-    const { event, currentTime, duration } = event.data.data;
-    // Handle: 'play', 'pause', 'time', 'complete'
-  }
+- **Next.js 14+ (App Router)**
+- **TypeScript**
+- **Tailwind CSS**
+- **OMDb API** (IMDb metadata)
+- **Vidsrc** (embed playback)
+
+---
+
+## 📁 Project Structure
+
+app/
+├─ page.tsx
+├─ watch/
+│ └─ [mediaType]/
+│ └─ [imdbId]/
+│ └─ page.tsx
+components/
+├─ PlayerFrame.tsx
+├─ WatchLayout.tsx
+├─ TvRemoteHints.tsx
+lib/
+├─ vidsrc.ts
+├─ imdb.ts
+
+yaml
+Copy code
+
+---
+
+## 🔗 Embed Logic (Example)
+
+```ts
+buildVidsrcUrl({
+  version: "v3",
+  mediaType: "movie",
+  id: "tt6263850",
+  autoPlay: false,
+  color: "#F5C400"
 });
-```
+Keewacker handles URL construction, parameters, and safety.
 
-## TV-Ready Navigation
+📺 TV / Remote Support
+⬆️⬇️⬅️➡️ Arrow navigation
 
-The UI is optimized for TV remotes and keyboards:
+⏎ Enter to select
 
-- **Arrow Keys**: Navigate between elements
-- **Enter**: Select/Play
-- **Backspace/Escape**: Go back
-- **? or H**: Show remote hints
-- **Yellow Focus Rings**: Visible focus indicators
-- **Large Hit Targets**: Minimum 56px buttons
+⬅️ Backspace / Esc to go back
 
-## Styling
+🟡 High-contrast focus rings
 
-Cinema dark theme with professional aesthetics:
+🔘 Large buttons & hit targets
 
-- **Background**: Near black (`#0a0a0a`)
-- **Surfaces**: Charcoal (`#1a1a1a`, `#242424`)
-- **Accent**: Warm yellow (`#f5c400`)
-- **Text**: Off-white (`#e5e5e5`)
-- **No neon colors** - Cinema aesthetic only
+Built for the couch 🛋️
 
-## Development
+🚀 Getting Started
+bash
+Copy code
+npm install
+npm run dev
+Create .env.local:
 
-### Build for Production
-```bash
-npm run build
-npm start
-```
-
-### Linting
-```bash
-npm run lint
-```
-
-## API Routes
-
-### GET /api/imdb/[imdbId]
-Fetch metadata for an IMDb ID (server-side, protects API key)
-
-**Response:**
-```json
-{
-  "imdbId": "tt6263850",
-  "title": "Deadpool 2",
-  "year": "2018",
-  "rated": "R",
-  "runtime": "119 min",
-  "genres": ["Action", "Adventure", "Comedy"],
-  "plot": "...",
-  "poster": "https://...",
-  "imdbRating": "7.6",
-  "type": "movie"
-}
-```
-
-### POST /api/progress
-Save playback progress
-
-**Request:**
-```json
-{
-  "imdbId": "tt6263850",
-  "mediaType": "movie",
-  "currentTime": 1234,
-  "duration": 7140,
-  "lastWatched": "2025-12-27T..."
-}
-```
-
-### GET /api/progress?imdbId=...
-Retrieve saved progress
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `OMDB_API_KEY` | Yes | Your OMDb API key |
-| `NEXT_PUBLIC_VIDSRC_ORIGIN` | No | Vidsrc origin (default: https://vidsrc.cc) |
-| `NEXT_PUBLIC_APP_NAME` | No | App name (default: Keewacker) |
-| `NEXT_PUBLIC_BASE_URL` | No | Base URL for API calls (default: http://localhost:3000) |
-
-## Production Deployment
-
-1. Set `NEXT_PUBLIC_BASE_URL` to your production domain
-2. Use a real database for progress tracking (replace in-memory Map)
-3. Add authentication/user accounts
-4. Implement search functionality
-5. Add favorites/watchlist features
-6. Cache metadata more aggressively
-
-## License
-
-MIT
-
-## Credits
-
-- **Video Embedding**: [Vidsrc.cc](https://vidsrc.cc)
-- **Metadata**: [OMDb API](https://www.omdbapi.com/)
-- **Framework**: [Next.js](https://nextjs.org/)
+env
+Copy code
+OMDB_API_KEY=your_key_here
+NEXT_PUBLIC_VIDSRC_ORIGIN=https://vidsrc.cc
